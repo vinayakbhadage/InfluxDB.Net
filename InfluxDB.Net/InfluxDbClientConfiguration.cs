@@ -9,7 +9,7 @@ namespace InfluxDB.Net
         {
         }
 
-        public InfluxDbClientConfiguration(Uri endpoint, string username, string password)
+        public InfluxDbClientConfiguration(Uri endpoint, string username, string password, int udpPort = 4444)
         {
             Check.NotNull(endpoint, "Endpoint may not be null or empty.");
             Check.NotNullOrEmpty(password, "Password may not be null or empty.");
@@ -17,12 +17,14 @@ namespace InfluxDB.Net
             Username = username;
             Password = password;
             EndpointBaseUri = SanitizeEndpoint(endpoint, false);
+            UdpPort = udpPort;
         }
 
         public Uri EndpointBaseUri { get; internal set; }
 
         public string Username { get; private set; }
         public string Password { get; private set; }
+        public int UdpPort { get; set; }
 
         private static Uri SanitizeEndpoint(Uri endpoint, bool isTls)
         {
@@ -45,5 +47,7 @@ namespace InfluxDB.Net
         {
             return new HttpClient();
         }
+
+       
     }
 }

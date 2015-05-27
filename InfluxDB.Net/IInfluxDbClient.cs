@@ -24,6 +24,9 @@ namespace InfluxDB.Net
         Task<InfluxDbApiResponse> Write(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name,
             Serie[] series, string timePrecision);
 
+
+        void WriteUdp(Serie[] series, string timePrecision);
+
         Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name,
             string query, string timePrecision);
 
@@ -86,5 +89,7 @@ namespace InfluxDB.Net
 
         Task<InfluxDbApiResponse> CreateShardSpace(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers,
             string database, ShardSpace shardSpace);
+
+       
     }
 }

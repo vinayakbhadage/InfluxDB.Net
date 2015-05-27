@@ -1,5 +1,6 @@
 ﻿using System.Net;
 
+
 namespace InfluxDB.Net
 {
     public class InfluxDbApiResponse

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using InfluxDB.Net.Models;
+using System.Net.Sockets;
 
 namespace InfluxDB.Net
 {
@@ -340,6 +341,15 @@ namespace InfluxDB.Net
                 handler(statusCode, responseBody);
             }
             _defaultErrorHandlingDelegate(statusCode, responseBody);
+        }
+
+
+        public void WriteUdp(Serie[] series, string timePrecision)
+        {
+            var content = new JsonRequestContent(series, new JsonSerializer());
+            byte[] sendBytes = Encoding.UTF8.GetBytes(content.GetJsonContent());
+
+            new UdpClient().Send(sendBytes, sendBytes.Length, _configuration.EndpointBaseUri.Host, _configuration.UdpPort);
         }
     }
 

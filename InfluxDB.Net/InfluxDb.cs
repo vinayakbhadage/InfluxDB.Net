@@ -13,8 +13,8 @@ namespace InfluxDB.Net
 
         private readonly IInfluxDbClient _influxDbClient;
 
-        public InfluxDb(string url, string username, string password)
-            : this(new InfluxDbClient(new InfluxDbClientConfiguration(new Uri(url), username, password)))
+        public InfluxDb(string url, string username, string password, int udpPort = 4444)
+            : this(new InfluxDbClient(new InfluxDbClientConfiguration(new Uri(url), username, password, udpPort)))
         {
             Check.NotNullOrEmpty(url, "The URL may not be null or empty.");
             Check.NotNullOrEmpty(username, "The username may not be null or empty.");
@@ -81,10 +81,12 @@ namespace InfluxDB.Net
         /// <param name="precision">The precision used for the values</param>
         /// <param name="series">An array of <see cref="Serie" /> to write</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiResponse> WriteUdpAsync(int port, TimeUnit precision, params Serie[] series)
+        public void WriteUdp(TimeUnit precision, params Serie[] series)
         {
-            throw new NotImplementedException("WriteUdpAsync is not implemented yet, sorry.");
+            _influxDbClient.WriteUdp(series, ToTimePrecision(precision));
         }
+
+
 
         /// <summary>
         ///     Execute a query agains a database.
@@ -111,7 +113,7 @@ namespace InfluxDB.Net
         /// <returns></returns>
         public async Task<InfluxDbApiCreateResponse> CreateDatabaseAsync(string name)
         {
-            var db = new Database {Name = name};
+            var db = new Database { Name = name };
 
             InfluxDbApiResponse response = await _influxDbClient.CreateDatabase(NoErrorHandlers, db);
 
@@ -161,7 +163,7 @@ namespace InfluxDB.Net
         /// <returns></returns>
         public async Task<InfluxDbApiResponse> CreateClusterAdminAsync(string username, string adminPassword)
         {
-            var user = new User {Name = username, Password = adminPassword};
+            var user = new User { Name = username, Password = adminPassword };
             return await _influxDbClient.CreateClusterAdmin(NoErrorHandlers, user);
         }
 
@@ -194,7 +196,7 @@ namespace InfluxDB.Net
         /// <returns></returns>
         public async Task<InfluxDbApiResponse> UpdateClusterAdminAsync(string username, string password)
         {
-            var user = new User {Name = username, Password = password};
+            var user = new User { Name = username, Password = password };
 
             return await _influxDbClient.UpdateClusterAdmin(NoErrorHandlers, user, username);
         }
@@ -212,7 +214,7 @@ namespace InfluxDB.Net
         public async Task<InfluxDbApiResponse> CreateDatabaseUserAsync(string database, string name, string password,
             params string[] permissions)
         {
-            var user = new User {Name = name, Password = password};
+            var user = new User { Name = name, Password = password };
             user.SetPermissions(permissions);
             return await _influxDbClient.CreateDatabaseUser(NoErrorHandlers, database, user);
         }
@@ -251,7 +253,7 @@ namespace InfluxDB.Net
         public async Task<InfluxDbApiResponse> UpdateDatabaseUserAsync(string database, string name, string password,
             params string[] permissions)
         {
-            var user = new User {Name = name, Password = password};
+            var user = new User { Name = name, Password = password };
             user.SetPermissions(permissions);
             return await _influxDbClient.UpdateDatabaseUser(NoErrorHandlers, database, user, name);
         }
@@ -267,7 +269,7 @@ namespace InfluxDB.Net
         public async Task<InfluxDbApiResponse> AlterDatabasePrivilegeAsync(string database, string name, bool isAdmin,
             params string[] permissions)
         {
-            var user = new User {Name = name, IsAdmin = isAdmin};
+            var user = new User { Name = name, IsAdmin = isAdmin };
             user.SetPermissions(permissions);
             return await _influxDbClient.UpdateDatabaseUser(NoErrorHandlers, database, user, name);
         }

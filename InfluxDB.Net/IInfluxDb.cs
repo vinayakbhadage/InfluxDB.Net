@@ -10,7 +10,7 @@ namespace InfluxDB.Net
         Task<Pong> PingAsync();
         Task<string> VersionAsync();
         Task<InfluxDbApiResponse> WriteAsync(string database, TimeUnit precision, params Serie[] series);
-        Task<InfluxDbApiResponse> WriteUdpAsync(int port, TimeUnit precision, params Serie[] series);
+        void WriteUdp(TimeUnit precision, params Serie[] series);
         Task<List<Serie>> QueryAsync(string database, string query, TimeUnit precision);
         Task<InfluxDbApiCreateResponse> CreateDatabaseAsync(string name);
         Task<InfluxDbApiCreateResponse> CreateDatabaseAsync(DatabaseConfiguration config);

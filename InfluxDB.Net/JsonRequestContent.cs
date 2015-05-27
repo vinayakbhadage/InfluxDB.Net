@@ -34,5 +34,11 @@ namespace InfluxDB.Net
             string serializedObject = Serializer.SerializeObject(Value);
             return new StringContent(serializedObject, Encoding.UTF8, JsonMimeType);
         }
+
+        public string GetJsonContent()
+        {
+            return Serializer.SerializeObject(Value);
+        }
+
     }
 }
